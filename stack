@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct stack{
+       int *arr;
+       int len;
+       int space;
+};
+
+void* append(struct stack*array,int element){
+    if(array->len==array->space){
+        int* new_array=(int*)malloc((array->space)*2*sizeof(int));
+        for(int i=0;i<array->len;i++){
+            new_array[i]=array->arr[i];
+        }
+        free(array->arr);
+        array->arr=new_array;
+        array->space= array->space*2;
+    }
+    array->arr[array->len]=element;
+    array->len+=1;
+
+}
+void* poplast(struct stack*array){
+   int last=array->arr[array->len-1];
+   array->len-=1;
+}
+
+int main(){
+    int 
+    //i ve done this array to test wether an array is complet with the symbols
+    *test_array=(int*)malloc(10*sizeof(int));
+    test_array[0]=2;
+    test_array[1]=5;
+    test_array[2]=5;
+    test_array[3]=2;
+    test_array[4]=9;
+    test_array[5]=9;
+    test_array[6]=10;
+    int testlen=7;   
+    //creat a stack so i can use it to add symbols
+    struct stack array;
+    array.arr=(int*)malloc(1*sizeof(int));
+    array.len=1;
+    array.space=1;
+    array.arr[0]=test_array[0];
+    for(int i=1;i<testlen;i++){
+        if (test_array[i]==array.arr[array.len-1])
+        {
+            poplast(&array);
+            printf("len %d\n",array.len);
+        }
+        else{
+            append(&array,test_array[i]);
+            printf("len %d\n",array.len);
+        }
+    }
+    if (array.len==0)
+    {
+        printf("complet");
+    }
+    else{
+        printf("not complet");
+    }
+    
+    return 0;
+}
