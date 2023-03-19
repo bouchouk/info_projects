@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+//it's a cards game: we have n cards (named from 1 to n card),we want to put the first card ,
+//in the table and bring the card that comes after(which is now the first card in the queue) 
+//to the back of our queue:print all the cards in the table and print the remaining card.
+struct queue{
+       int *arr;
+       int len;
+       int space;
+};
+
+void* append(struct queue*array,int element){
+    if(array->len==array->space){
+        int* new_array=(int*)malloc((array->space)*2*sizeof(int));
+        for(int i=0;i<array->len;i++){
+            new_array[i]=array->arr[i];
+        }
+        free(array->arr);
+        array->arr=new_array;
+        array->space= array->space*2;
+    }
+    array->arr[array->len]=element;
+    array->len+=1;
+
+}
+void* popfirst(struct queue*array){
+    int first=array->arr[0];
+    array->len-=1;
+    array->arr=array->arr+1;
+    array->space-=1;
+}
+
+int main(){
+int n;
+scanf("%d",&n);
+struct queue cards;
+cards.arr=(int*)malloc(2*n*sizeof(int));
+cards.len=n;
+cards.space=2*n;
+//we put our cards in the queue
+for (int i = 0; i < n; i++)
+{
+    cards.arr[i]=i+1;
+}
+//now lets play
+
+printf("the cards in the table:");
+while (cards.len!=1)
+{
+    printf("%d,",cards.arr[0]);
+    popfirst(&cards);
+    append(&cards,cards.arr[0]);
+    popfirst(&cards);
+    
+}
+printf("\n the last card:%d",cards.arr[0]);
+
+ return 0;
+}
