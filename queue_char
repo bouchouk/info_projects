@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+//it's a cards game: we have n cards (named from a to z card),we want to put the first card ,
+//in the table and bring the card that comes after(which is now the first card in the queue) 
+//to the back of our queue:print all the cards in the table and print the remaining card.
+struct queue{
+       char *arr;
+       int len;
+       int space;
+       char*o_arr;
+};
+
+void* append(struct queue*array,char element){
+    if(array->len==array->space){
+        char* new_array=(char*)malloc((array->space)*2*sizeof(char));
+        for(int i=0;i<array->len;i++){
+            new_array[i]=array->arr[i];
+        }
+        free(array->o_arr);
+        array->arr=new_array;
+        array->space= array->space*2;
+    }
+    array->arr[array->len]=element;
+    array->len+=1;
+
+}
+void* popfirst(struct queue*array){
+    char first=array->arr[0];
+    array->len-=1;
+    array->arr=array->arr+1;
+    array->space-=1;
+}
+/*char peak(struct queue*array){
+    return array->arr[array->len-1];
+}*/
+
+int main(){
+char n;
+scanf("%c",&n);
+struct queue cards;
+cards.o_arr=(char*)malloc(30*sizeof(char));
+cards.arr=cards.o_arr;
+cards.len=(int)n-97+1; //97 ascii of a
+cards.space=30;
+//we put our cards in the queue
+for ( int i = 0; i <= (int)n-97; i++)
+{
+    cards.arr[i]=(char)(i+97);
+}
+//now lets play
+
+printf("the cards in the table:");
+while (cards.len!=1)
+{
+    printf("%c,",cards.arr[0]);
+    popfirst(&cards);
+    append(&cards,cards.arr[0]);
+    popfirst(&cards);
+    
+}
+printf("\n the last card:%c",cards.arr[0]);
+
+ return 0;
+}
