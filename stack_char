@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct stack{
+       char *arr;
+       int len;
+       int space;
+};
+
+void* push(struct stack*array,char element){
+    if(array->len==array->space){
+        char* new_array=(char*)malloc((array->space)*2*sizeof(char));
+        for(char i=0;i<array->len;i++){
+            new_array[i]=array->arr[i];
+        }
+        free(array->arr);
+        array->arr=new_array;
+        array->space= array->space*2;
+    }
+    array->arr[array->len]=element;
+    array->len+=1;
+
+}
+void* pop(struct stack*array){
+   char last=array->arr[array->len-1];
+   array->len-=1;
+}
+
+char main(){
+    char 
+    //i ve done this array to test wether an array is complet with the symbols
+    *test_array=(char*)malloc(10*sizeof(char));
+    test_array[0]='[';
+    test_array[1]='{';
+    test_array[2]='{';
+    test_array[3]='[';
+    test_array[4]='(';
+    test_array[5]='(';
+    //test_array[6]='';
+
+    char testlen=6;   
+    //creat a stack so i can use it to add symbols
+    struct stack array;
+    array.arr=(char*)malloc(1*sizeof(char));
+    array.len=1;
+    array.space=1;
+    array.arr[0]=test_array[0];
+    for(char i=1;i<testlen;i++){
+        if (test_array[i]==array.arr[array.len-1])
+        {
+            pop(&array);
+            //printf("len %d\n",array.len);
+        }
+        else{
+            push(&array,test_array[i]);
+            //printf("len %d\n",array.len);
+        }
+    }
+    if (array.len==0)
+    {
+        printf("complet");
+    }
+    else{
+        printf("not complet");
+    }
+    
+    return 0;
+}
