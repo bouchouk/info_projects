@@ -8,7 +8,7 @@ struct stack{
        int space;
 };
 
-void* append(struct stack*array,int element){
+void* push(struct stack*array,int element){
     if(array->len==array->space){
         int* new_array=(int*)malloc((array->space)*2*sizeof(int));
         for(int i=0;i<array->len;i++){
@@ -22,7 +22,7 @@ void* append(struct stack*array,int element){
     array->len+=1;
 
 }
-void* poplast(struct stack*array){
+void* pop(struct stack*array){
    int last=array->arr[array->len-1];
    array->len-=1;
 }
@@ -48,11 +48,11 @@ int main(){
     for(int i=1;i<testlen;i++){
         if (test_array[i]==array.arr[array.len-1])
         {
-            poplast(&array);
+            pop(&array);
             printf("len %d\n",array.len);
         }
         else{
-            append(&array,test_array[i]);
+            push(&array,test_array[i]);
             printf("len %d\n",array.len);
         }
     }
