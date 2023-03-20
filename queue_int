@@ -9,6 +9,7 @@ struct queue{
        int *arr;
        int len;
        int space;
+       int*o_arr;
 };
 
 void* append(struct queue*array,int element){
@@ -17,7 +18,7 @@ void* append(struct queue*array,int element){
         for(int i=0;i<array->len;i++){
             new_array[i]=array->arr[i];
         }
-        free(array->arr);
+        free(array->o_arr);
         array->arr=new_array;
         array->space= array->space*2;
     }
@@ -25,20 +26,24 @@ void* append(struct queue*array,int element){
     array->len+=1;
 
 }
-void* popfirst(struct queue*array){
+void* pop(struct queue*array){
     int first=array->arr[0];
     array->len-=1;
     array->arr=array->arr+1;
     array->space-=1;
+}
+int peak(truct queue*array){
+    return array->arr[array->len-1];
 }
 
 int main(){
 int n;
 scanf("%d",&n);
 struct queue cards;
-cards.arr=(int*)malloc(2*n*sizeof(int));
+cards.o_arr=(int*)malloc(n*sizeof(int));
+cards.arr=cards.o_arr;
 cards.len=n;
-cards.space=2*n;
+cards.space=n;
 //we put our cards in the queue
 for (int i = 0; i < n; i++)
 {
@@ -50,9 +55,9 @@ printf("the cards in the table:");
 while (cards.len!=1)
 {
     printf("%d,",cards.arr[0]);
-    popfirst(&cards);
+    pop(&cards);
     append(&cards,cards.arr[0]);
-    popfirst(&cards);
+    pop(&cards);
     
 }
 printf("\n the last card:%d",cards.arr[0]);
