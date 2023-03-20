@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+ struct dynamic_array
+    {
+        char *arr;
+        int space;
+        int len;
+    };
+void* append(struct dynamic_array*array,char element){
+    if(array->len==array->space){
+        char* new_array=(char*)malloc((array->space)*2*sizeof(char));
+        for(char i=0;i<array->len;i++){
+            new_array[i]=array->arr[i];
+        }
+        free(array->arr);
+        //printf("hi");
+        array->arr=new_array;
+        array->space= array->space*2;
+    }
+    array->arr[array->len]=element;
+    array->len+=1;
+
+}
+
+char main(){
+    struct dynamic_array array;
+    array.arr=(char*)malloc(10*sizeof(char));
+    array.len=2;
+    array.space=10;
+    array.arr[0]='c';
+    array.arr[1]='b';
+    for(int i =2;i<100;i++)
+    {
+    append(&array,(char)i);
+    }
+    for(int i = 0;i<100;i++){
+        printf("%c",array.arr[i]);
+    }
+
+    return 0;
+}
