@@ -1,0 +1,177 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct queue{
+       int *arr;
+       int len;
+       int space;
+       int*o_arr;
+};
+void* add(struct queue*array,int element){
+    if(array->len==array->space){
+        int* new_array=(int*)malloc((array->space)*2*sizeof(int));
+        for(int i=0;i<array->len;i++){
+            new_array[i]=array->arr[i];
+        }
+        free(array->o_arr);
+        array->arr=new_array;
+        array->space= array->space*2;
+    }
+    array->arr[array->len]=element;
+    array->len+=1;
+
+}
+int popfirst(struct queue*array){
+    int first=array->arr[0];
+    array->len-=1;
+    array->arr=array->arr+1;
+    //array->space-=1;
+    return first;
+}
+struct dynamic_array
+    {
+        int *arr;
+        int space;
+        int len;
+    };
+
+void* append(struct dynamic_array*array,int element){
+    if(array->len==array->space){
+        int* new_array=(int*)malloc((array->space)*2*sizeof(int));
+        for(int i=0;i<array->len;i++){
+            new_array[i]=array->arr[i];
+        }
+        free(array->arr);
+        //printf("hi");
+        array->arr=new_array;
+        array->space= array->space*2;
+    }
+    array->arr[array->len]=element;
+    array->len+=1;
+
+}
+
+int BFS(struct dynamic_array**graph,int nodes){
+int*marked=(int*)calloc(nodes+1,sizeof(int));
+struct queue q;
+q.o_arr=(int*)malloc(2*sizeof(int));
+q.arr=q.o_arr;
+q.space=2;
+q.len=0;
+int x=0;
+for(int i =1; i<nodes+1 ;i++){
+if(marked[i]==0){
+    q.len=1;
+    q.arr[0]=i;
+    x++;
+    while (q.len>0)
+    {   
+        int v=popfirst(&q);
+        if(marked[v]==0){
+            marked[v]=1;
+            for(int j=0; j<graph[v]->len ; j++){
+                int neighbor=graph[v]->arr[j];
+                if(marked[neighbor]==0){
+                    add(&q, neighbor);
+                }
+            }
+        }
+    }
+}
+}
+printf("BFS:we have %d graph(s)",x);
+}
+
+void DFS(struct dynamic_array**graph,int element,int*visited){
+    for(int i=0; i<graph[element]->len; i++){
+        if(visited[graph[element]->arr[i]]==0){
+            visited[graph[element]->arr[i]]=1;
+            DFS(graph,graph[element]->arr[i], visited);
+        }
+    }
+}
+int how_many_graph_DFS(struct dynamic_array**graph,int nodes){
+    int x=0;
+    int* visited=(int*)calloc(nodes+1,sizeof(int));
+    for(int i=1; i<nodes+1 ;i++){
+        if(visited[i]==0){
+            DFS(graph,i, visited);
+            x++;
+        }
+    }
+    printf("DFS:we have %d graph(s)\n",x);
+    return x;
+}
+
+void check_trees(struct dynamic_array**graph,int nodes,int edges){
+    if(nodes-1==edges && how_many_graph_DFS(graph,nodes)==1){
+        printf("it s a tree\n");
+    }
+    else
+    {
+        printf("it s not a tree\n");
+    }
+    
+}
+
+
+int main(){
+  int nodes,edges;
+  scanf("%d %d",&nodes,&edges);
+  struct dynamic_array**graph=(struct dynamic_array**)calloc(nodes+1,sizeof(struct dynamic_array*));
+  for (int i = 0; i <edges; i++)
+  { 
+    int a,b;
+    scanf("%d %d",&a,&b);
+    if(graph[a]==NULL && graph[b]==NULL){
+    struct dynamic_array *connections=(struct dynamic_array*)malloc(1*sizeof(struct dynamic_array));
+    graph[a]=connections;
+    connections->arr=(int*)malloc(1*sizeof(int));
+    connections->space=1;
+    connections->len=1;
+    graph[a]->arr[0]=b;
+    struct dynamic_array *connectionsb=(struct dynamic_array*)malloc(1*sizeof(struct dynamic_array));
+    graph[b]=connectionsb;
+    connectionsb->arr=(int*)malloc(1*sizeof(int));
+    connectionsb->space=1;
+    connectionsb->len=1;
+    graph[b]->arr[0]=a;
+    }
+    else if (graph[a]==NULL)
+    {
+    struct dynamic_array *connections=(struct dynamic_array*)malloc(1*sizeof(struct dynamic_array));
+    graph[a]=connections;
+    connections->arr=(int*)malloc(1*sizeof(int));
+    connections->space=1;
+    connections->len=1;
+    graph[a]->arr[0]=b;
+    append(graph[b],a);
+    }
+    else if (graph[b]==NULL)
+    {
+    struct dynamic_array *connectionsb=(struct dynamic_array*)malloc(1*sizeof(struct dynamic_array));
+    graph[b]=connectionsb;
+    connectionsb->arr=(int*)malloc(1*sizeof(int));
+    connectionsb->space=1;
+    connectionsb->len=1;
+    graph[b]->arr[0]=a;
+    append(graph[a],b);
+    }
+    else{
+    append(graph[a],b);
+    append(graph[b],a);
+    }
+  }
+
+for(int i =1; i<nodes+1 ;i++){
+    printf("%d:",i);
+    for(int j=0; j<graph[i]->len; j++){
+        printf("%d,",graph[i]->arr[j]);
+    }
+    printf("\n");
+}
+//how_many_graph_DFS(graph,nodes);
+check_trees(graph,nodes,edges);
+BFS(graph,nodes);
+
+    return 0; 
+}
