@@ -15,6 +15,40 @@ void append(struct list * array, int element){
     new_place->data=element;
     
 }
+
+void pop(struct list * array){
+     
+     while(array->next->next!=NULL){
+        array=array->next;
+    }
+    free(array->next);
+    array->next=NULL;
+}
+ int* remove_element(struct list * array, int element){
+     
+      while(array->next->next!=NULL){
+        if (array->next->data==element)
+        {
+          struct list *q = array->next;
+          array->next=array->next->next;
+          free(q); 
+        }
+        else
+        {
+          array=array->next;
+        }
+        
+    }
+    if (array->next->data==element)
+        {
+          struct list *q = array->next;
+          array->next=NULL; 
+          free(q);
+        }
+}
+
+
+
 void printList(struct list* head)
 {
     while (head->next != NULL) {
@@ -36,5 +70,12 @@ int main(){
     third->next=NULL;
     append(head,2);
     printList(head);
+    printf("pop\n");
+    pop(head);
+    printList(head);
+    printf("remove\n");
+    remove_element(head,2);
+    printList(head);
     return 0;
 }
+
